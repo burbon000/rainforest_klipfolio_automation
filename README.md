@@ -1,4 +1,4 @@
-# Rainforest Livefyre Automation
+# Rainforest Klipfolio Automation
 
 ## Prerequisites
 
