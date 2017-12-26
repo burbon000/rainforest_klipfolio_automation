@@ -17,6 +17,9 @@ test(id: 90753, title: "Changing public link to a private link") do
       :url => 'http://RFAutomation:5328f84f-5623-41ba-a81e-b5daff615024@ondemand.saucelabs.com:80/wd/hub',
       :desired_capabilities => @desired_cap
     )
+  end
+  Capybara.register_driver :browser_stack do |app|
+    Capybara::Selenium::Driver.new(app, :browser => :chrome)
   end  
   rand_num=Random.rand(899999999) + 100000000
   link_text = ''
@@ -32,9 +35,7 @@ test(id: 90753, title: "Changing public link to a private link") do
                 " show up at the top right corner of the page?" do
     # *** START EDITING HERE ***
     expect(page).to have_content('Klipfolio')
-    username = ''
-    password = ''
-    firstname = ''
+
 
     # action
     fill_in 'username', with: username

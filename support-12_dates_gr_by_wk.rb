@@ -18,7 +18,10 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
       :desired_capabilities => @desired_cap
     )
   end
-
+  Capybara.register_driver :browser_stack do |app|
+    Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  end
+  
   rand_num=Random.rand(899999999) + 100000000
   
   visit "https://app.Klipfolio.com/"
@@ -33,9 +36,7 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
                 " show up at the top right corner of the page?" do
     # *** START EDITING HERE ***
     expect(page).to have_content('Klipfolio')
-    username = ''
-    password = ''
-    first_name = ''
+
 
     # action
     fill_in 'username', with: username
@@ -47,7 +48,7 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
     expect(page).to have_content('My Dashboards')
 
 
-    page.save_screenshot('screenshot_step_1.png')
+    #page.save_screenshot('screenshot_step_1.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -74,7 +75,7 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
     expect(page).to have_content('Klip 12')
 
     
-    page.save_screenshot('screenshot_step_2.png')
+    #page.save_screenshot('screenshot_step_2.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -93,10 +94,10 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
       expect(page).to have_content('Medium')
       expect(page).to have_content('Dates')
       expect(page).to have_content('Sessions')
-      expect(page.all(:css, 'th').count).to eql(2)
+      expect(page.all(:css, 'th', :count => 2, wait: 60).count).to eql(2)
     end
 
-    page.save_screenshot('screenshot_step_3.png')
+    #page.save_screenshot('screenshot_step_3.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -108,12 +109,12 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
 
     # action
       #Do nothing
+      sleep(10)
 
     # response
     within(:css, '.klip', :text => 'Klip 12') do
       #within(:css, 'tr', :match => :first) do
         first_date = page.find(:css, 'td', :match => :first).text
-        puts first_date
         first_date_split = first_date.split('-')
         year = first_date_split[0].to_i
         expect(year >= 2000).to eql(true)
@@ -124,7 +125,7 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
       #end
     end
 
-    page.save_screenshot('screenshot_step_4.png')
+    #page.save_screenshot('screenshot_step_4.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -152,7 +153,7 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
       #end
     end
 
-    page.save_screenshot('screenshot_step_5.png')
+    #page.save_screenshot('screenshot_step_5.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -180,7 +181,7 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
       #end
     end
 
-    page.save_screenshot('screenshot_step_5.png')
+    #page.save_screenshot('screenshot_step_5.png')
     # *** STOP EDITING HERE ***
   end
 

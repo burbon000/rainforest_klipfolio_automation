@@ -10,7 +10,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
       'platform': "Windows 7",
       'browserName': "firefox",
       'version': "45",
-      'name': "klipfolio_master_dash_1",
+      'name': "klipfolio_dash_logo_replace",
     }
     Capybara::Selenium::Driver.new(app,
       :browser => :remote,
@@ -18,9 +18,14 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
       :desired_capabilities => @desired_cap
     )
   end
+  Capybara.register_driver :browser_stack do |app|
+    Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  end
   rand_num=Random.rand(899999999) + 100000000
   visit "https://app.Klipfolio.com/"
   window = Capybara.current_session.driver.browser.manage.window
+
+
   #window.maximize
 
   step id: 1,
@@ -30,8 +35,6 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
               " show up at the top right corner of the page?" do
     # *** START EDITING HERE ***
     expect(page).to have_content('Klipfolio')
-    username = ''
-    password = ''
 
     # action
     fill_in 'username', with: username
@@ -42,7 +45,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
     expect(page).to have_selector(:css, '#nav-dashboard')
     expect(page).to have_content('My Dashboards')
 
-    page.save_screenshot('screenshot_step_1.png')
+    #page.save_screenshot('screenshot_step_1.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -61,7 +64,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
       expect(page).to have_selector(:css, "img[id='upload-logo-output']")
     end
 
-    page.save_screenshot('screenshot_step_2.png')
+    #page.save_screenshot('screenshot_step_2.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -77,7 +80,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
     # response
     expect(page).to have_no_selector(:css, "img[id='upload-logo-output']", wait: 5)
 
-    page.save_screenshot('screenshot_step_3.png')
+    #page.save_screenshot('screenshot_step_3.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -92,10 +95,10 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
 
     # response
     expect(page).to have_no_content('Replace Your Dashboard Logo')
-    expect(page).to have_content('RainforestTesters-6')
+    expect(page).to have_content(firstname)
     #Might want to wait longer for page to finish loading?
 
-    page.save_screenshot('screenshot_step_4.png')
+    #page.save_screenshot('screenshot_step_4.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -113,7 +116,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
     expect(page).to have_content('My Profile')
     expect(page).to have_selector(:css, "#nav-account[class='active']")
 
-    page.save_screenshot('screenshot_step_5.png')
+    #page.save_screenshot('screenshot_step_5.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -129,7 +132,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
     # response 
     expect(page).to have_selector(:css, "#tab-settings[class='admin-tab active']")
 
-    page.save_screenshot('screenshot_step_6.png')
+    #page.save_screenshot('screenshot_step_6.png')
     # *** STOP EDITING HERE ***
 
   end
@@ -147,7 +150,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
     # response
     expect(page.find(:css, '.dashboard-name.ellipsis', :match => :first).text).to eql(page.find(:css, '#headerName').text)
 
-    page.save_screenshot('screenshot_step_7.png')
+    #page.save_screenshot('screenshot_step_7.png')
     # *** STOP EDITING HERE ***
 
   end
@@ -167,7 +170,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
       expect(page).to have_no_selector(:css, "img[id='upload-logo-output']")
     end
 
-    page.save_screenshot('screenshot_step_8.png')
+    #page.save_screenshot('screenshot_step_8.png')
     # *** STOP EDITING HERE ***
 
   end
@@ -186,7 +189,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
       expect(page).to have_selector(:css, "img[id='upload-logo-output']")
     end
 
-    page.save_screenshot('screenshot_step_9.png')
+    #page.save_screenshot('screenshot_step_9.png')
     # *** STOP EDITING HERE ***
 
   end
@@ -205,7 +208,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
     expect(page).to have_no_content('Replace Your Dashboard Logo')
     expect(page).to have_no_selector(:css, '.overlay-container')
     
-    page.save_screenshot('screenshot_step_10.png')
+    #page.save_screenshot('screenshot_step_10.png')
     # *** STOP EDITING HERE ***
 
   end

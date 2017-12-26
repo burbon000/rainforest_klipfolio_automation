@@ -18,6 +18,9 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
       :desired_capabilities => @desired_cap
     )
   end
+  Capybara.register_driver :browser_stack do |app|
+    Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  end
   rand_num=Random.rand(899999999) + 100000000
 
   visit "https://app.Klipfolio.com/login"
@@ -31,8 +34,7 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
                 " show up at the top right corner of the page?" do
     # *** START EDITING HERE ***
     expect(page).to have_content('Klipfolio')
-    username = ''
-    password = ''
+
 
     # action
     fill_in 'username', with: username
@@ -43,7 +45,7 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
     expect(page).to have_selector(:css, '#nav-dashboard')
     expect(page).to have_content('My Dashboards')
 
-    page.save_screenshot('screenshot_step_1.png')
+    #page.save_screenshot('screenshot_step_1.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -67,7 +69,7 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
     expect(page).to have_content('Wait time: ')
     expect(page).to have_content('Table with Drill Down - Sample')
     
-    page.save_screenshot('screenshot_step_2.png')
+    #page.save_screenshot('screenshot_step_2.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -88,7 +90,7 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
       end
     end
 
-    page.save_screenshot('screenshot_step_3.png')
+    #page.save_screenshot('screenshot_step_3.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -113,7 +115,7 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
       end
     end
 
-    page.save_screenshot('screenshot_step_4.png')
+    #page.save_screenshot('screenshot_step_4.png')
     # *** STOP EDITING HERE ***
   end
 
@@ -136,7 +138,7 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
       end
     end
 
-    page.save_screenshot('screenshot_step_5.png')
+    #page.save_screenshot('screenshot_step_5.png')
     # *** STOP EDITING HERE ***
   end
 
