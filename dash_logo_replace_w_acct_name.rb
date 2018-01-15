@@ -1,10 +1,12 @@
 #tester starts at 
-# https://lemonsarebetter.herokuapp.com/widget.php?network=rainforestqa.fyre.co&site=383920&articleId=ekrfjherf34823&appType=reviews&userId=user1_9080908090
+# "https://app.Klipfolio.com/login"
 
 
 test(id: 93385, title: "Dashboard logo - replace with account name") do
   # You can use any of the following variables in your code:
   # - []
+
+  # used to run Saucelabs with version 45 of Firefox. Version 50 was causing problems with some functionality
    Capybara.register_driver :sauce do |app|
     @desired_cap = {
       'platform': "Windows 7",
@@ -14,19 +16,21 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
     }
     Capybara::Selenium::Driver.new(app,
       :browser => :remote,
-      :url => 'http://RFAutomation:5328f84f-5623-41ba-a81e-b5daff615024@ondemand.saucelabs.com:80/wd/hub',
+      :url => 'http://@ondemand.saucelabs.com:80/wd/hub',
       :desired_capabilities => @desired_cap
     )
   end
-  Capybara.register_driver :browser_stack do |app|
+  # chrome testing
+  Capybara.register_driver :selenium do |app|
     Capybara::Selenium::Driver.new(app, :browser => :chrome)
   end
-  rand_num=Random.rand(899999999) + 100000000
+
+  username = ''
+  password = ''
+  first_name = ''
+  account_name = ''
   visit "https://app.Klipfolio.com/"
-  window = Capybara.current_session.driver.browser.manage.window
 
-
-  #window.maximize
 
   step id: 1,
       action: "Enter your username(email address): '{{qualityassuranceTesters.user}}' and password: "\
@@ -44,6 +48,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
     # response
     expect(page).to have_selector(:css, '#nav-dashboard')
     expect(page).to have_content('My Dashboards')
+    expect(page).to have_content(first_name)
 
     #page.save_screenshot('screenshot_step_1.png')
     # *** STOP EDITING HERE ***
@@ -95,8 +100,7 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
 
     # response
     expect(page).to have_no_content('Replace Your Dashboard Logo')
-    expect(page).to have_content(firstname)
-    #Might want to wait longer for page to finish loading?
+    expect(page).to have_content(account_name)
 
     #page.save_screenshot('screenshot_step_4.png')
     # *** STOP EDITING HERE ***

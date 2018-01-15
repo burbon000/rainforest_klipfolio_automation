@@ -5,6 +5,8 @@
 test(id: 87012, title: "Master Dashboard 1 visual verification") do
   # You can use any of the following variables in your code:
   # - []
+
+  # used to run Saucelabs with version 45 of Firefox. Version 50 was causing problems with some functionality
   Capybara.register_driver :sauce do |app|
     @desired_cap = {
       'platform': "Windows 7",
@@ -14,18 +16,16 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
     }
     Capybara::Selenium::Driver.new(app,
       :browser => :remote,
-      :url => 'http://RFAutomation:5328f84f-5623-41ba-a81e-b5daff615024@ondemand.saucelabs.com:80/wd/hub',
+      :url => 'http://@ondemand.saucelabs.com:80/wd/hub',
       :desired_capabilities => @desired_cap
     )
   end
-  Capybara.register_driver :browser_stack do |app|
+  #chrome testing
+  Capybara.register_driver :selenium do |app|
     Capybara::Selenium::Driver.new(app, :browser => :chrome)
   end
-  rand_num=Random.rand(899999999) + 100000000
-
+  
   visit "https://app.Klipfolio.com/login"
-  window = Capybara.current_session.driver.browser.manage.window
-  #window.maximize
 
   step id: 1,
       action: "Enter your username(email address): '{{qualityassuranceTesters.user}}' and password: "\
@@ -33,8 +33,10 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
       response: "After the sign in, does your account First name: {{qualityassuranceTesters.firstname}}"\
                 " show up at the top right corner of the page?" do
     # *** START EDITING HERE ***
+    
     expect(page).to have_content('Klipfolio')
-
+    username = ''
+    password = ''
 
     # action
     fill_in 'username', with: username
@@ -63,7 +65,7 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
     within(:css, '.klip', :text => 'News Reader - Sample') do
       expect(page).to have_selector(:css, "tr[class='item']", :match => :first, :visible => true)
     end
-    #expect(page).to have_content('News Reader - Sample')
+    
     expect(page).to have_content('Klip Gallery Usage by User Type')
     expect(page).to have_content('Map - Sample 2')
     expect(page).to have_content('Wait time: ')
@@ -89,6 +91,8 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
         expect(expected_text.include? table_rows[i].text).to eql(true)
       end
     end
+    # added so it is easier to see behavior during replay
+    sleep(1)
 
     #page.save_screenshot('screenshot_step_3.png')
     # *** STOP EDITING HERE ***
@@ -114,6 +118,8 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
         expect(expected_text.include? table_rows[i].text).to eql(true)
       end
     end
+    # added so it is easier to see behavior during replay
+    sleep(1)
 
     #page.save_screenshot('screenshot_step_4.png')
     # *** STOP EDITING HERE ***
@@ -137,6 +143,8 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
         expect(expected_text.include? table_rows[i].text).to eql(true)
       end
     end
+    # added so it is easier to see behavior during replay
+    sleep(1)
 
     #page.save_screenshot('screenshot_step_5.png')
     # *** STOP EDITING HERE ***

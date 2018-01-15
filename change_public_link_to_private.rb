@@ -1,10 +1,12 @@
 #tester starts at 
-# https://
+# "https://app.Klipfolio.com/login"
 
 
 test(id: 90753, title: "Changing public link to a private link") do
   # You can use any of the following variables in your code:
   # - []
+
+  # used to run Saucelabs with version 45 of Firefox. Version 50 was causing problems with some functionality
   Capybara.register_driver :sauce do |app|
     @desired_cap = {
       'platform': "Windows 7",
@@ -14,18 +16,19 @@ test(id: 90753, title: "Changing public link to a private link") do
     }
     Capybara::Selenium::Driver.new(app,
       :browser => :remote,
-      :url => 'http://RFAutomation:5328f84f-5623-41ba-a81e-b5daff615024@ondemand.saucelabs.com:80/wd/hub',
+      :url => 'http://@ondemand.saucelabs.com:80/wd/hub',
       :desired_capabilities => @desired_cap
     )
   end
-  Capybara.register_driver :browser_stack do |app|
+  # chrome testing
+  Capybara.register_driver :selenium do |app|
     Capybara::Selenium::Driver.new(app, :browser => :chrome)
   end  
-  rand_num=Random.rand(899999999) + 100000000
+  
+  # needed to store the public link url to be able to navigate to it
   link_text = ''
+  
   visit "https://app.Klipfolio.com/"
-  window = Capybara.current_session.driver.browser.manage.window
-  #window.maximize
 
   
   step id: 1,
@@ -34,8 +37,11 @@ test(id: 90753, title: "Changing public link to a private link") do
       response: "After the sign in, does your account First name: {{qualityassuranceTesters.firstname}}"\
                 " show up at the top right corner of the page?" do
     # *** START EDITING HERE ***
-    expect(page).to have_content('Klipfolio')
 
+    expect(page).to have_content('Klipfolio')
+    username = ''
+    password = ''
+    firstname = ''
 
     # action
     fill_in 'username', with: username
@@ -75,7 +81,6 @@ test(id: 90753, title: "Changing public link to a private link") do
   step id: 3,
       action: "Set the Visibility to 'Public and available via search', overwrite the Dashboard Name by typing 'my link',"\
               " set the Theme to DARK, then click on the PUBLISH NOW button.",
-      #response: "Do you see a new dialog or a pop up? (You’re about to make this dashboard accessible by the public.)" do
       response: "Do you see a new dialog or a pop up? (Congrats! You're one step away from making your dashboard public.)" do
 
     # *** START EDITING HERE ***
@@ -91,7 +96,6 @@ test(id: 90753, title: "Changing public link to a private link") do
     # response
 
     expect(page).to have_content("Congrats! You're one step away from making your dashboard public.")
-    #expect(page).to have_content('You’re about to make this dashboard accessible by the public.')
     
     #page.save_screenshot('screenshot_step_3.png')
     # *** STOP EDITING HERE ***

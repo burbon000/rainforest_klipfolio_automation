@@ -5,6 +5,8 @@
 test(id: 92243, title: "Support.12 - dates grouped by week") do
   # You can use any of the following variables in your code:
   # - []
+
+  # used to run Saucelabs with version 45 of Firefox. Version 50 was causing problems with some functionality
   Capybara.register_driver :sauce do |app|
     @desired_cap = {
       'platform': "Windows 7",
@@ -14,20 +16,19 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
     }
     Capybara::Selenium::Driver.new(app,
       :browser => :remote,
-      :url => 'http://RFAutomation:5328f84f-5623-41ba-a81e-b5daff615024@ondemand.saucelabs.com:80/wd/hub',
+      :url => 'http://@ondemand.saucelabs.com:80/wd/hub',
       :desired_capabilities => @desired_cap
     )
   end
-  Capybara.register_driver :browser_stack do |app|
+  # chrome testing
+  Capybara.register_driver :selenium do |app|
     Capybara::Selenium::Driver.new(app, :browser => :chrome)
   end
   
-  rand_num=Random.rand(899999999) + 100000000
-  
+  #used to keep track of scroll position when scrolling down
+  scroll_offset = 0
+
   visit "https://app.Klipfolio.com/"
-  window = Capybara.current_session.driver.browser.manage.window
-  #window.resize_to(960,1024)
-  #window.maximize
 
   step id: 1,
       action: "Enter your username(email address): '{{qualityassuranceTesters.user}}' and password: "\
@@ -35,8 +36,11 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
       response: "After the sign in, does your account First name: {{qualityassuranceTesters.firstname}}"\
                 " show up at the top right corner of the page?" do
     # *** START EDITING HERE ***
-    expect(page).to have_content('Klipfolio')
 
+    expect(page).to have_content('Klipfolio')
+    username = ''
+    password = ''
+    first_name = ''
 
     # action
     fill_in 'username', with: username
@@ -58,6 +62,7 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
     # *** START EDITING HERE ***
     
     # action
+      # scroll to the right in the dashboard menu bar if needed
     within(:css, '#dashboard-tabs-container') do
       for i in 1..5 do
         if page.has_selector?(:css, '.btn-scroll.right-scroll', wait: 3)
@@ -73,8 +78,9 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
     # response
     expect(page).to have_selector(:css, ".dashboard-tab.active[title='Support Klips (Applied Actions)']", wait: 30)
     expect(page).to have_content('Klip 12')
-
-    
+    within(:css, '.klip', :text => 'Klip 12') do
+      expect(page.all(:css, 'td', :count => 6, wait: 30).count).to eql(6)
+    end
     #page.save_screenshot('screenshot_step_2.png')
     # *** STOP EDITING HERE ***
   end
@@ -86,7 +92,11 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
     # *** START EDITING HERE ***
 
     # action
-      #Do nothing
+      # scroll down the screen to bring Klip 12 into view
+    for i in 1..4 do
+      scroll_offset += 450 
+      page.execute_script("window.scrollTo(0,#{scroll_offset})")
+    end
 
     # response
     within(:css, '.klip', :text => 'Klip 12') do
@@ -94,7 +104,7 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
       expect(page).to have_content('Medium')
       expect(page).to have_content('Dates')
       expect(page).to have_content('Sessions')
-      expect(page.all(:css, 'th', :count => 2, wait: 60).count).to eql(2)
+      expect(page.all(:css, 'th', :count => 2, wait: 30).count).to eql(2)
     end
 
     #page.save_screenshot('screenshot_step_3.png')
@@ -108,21 +118,21 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
     # *** START EDITING HERE ***
 
     # action
-      #Do nothing
-      sleep(10)
-
+    
     # response
     within(:css, '.klip', :text => 'Klip 12') do
-      #within(:css, 'tr', :match => :first) do
-        first_date = page.find(:css, 'td', :match => :first).text
-        first_date_split = first_date.split('-')
-        year = first_date_split[0].to_i
-        expect(year >= 2000).to eql(true)
-        expect(year <= 2018).to eql(true)
-        week = first_date_split[1].to_i
-        expect(week > 0).to eql(true)
-        expect(week < 54).to eql(true)
-      #end
+        date_elements = page.all(:css, 'td', :minimum => 6, wait: 5)
+        for x in 0...date_elements.length do
+          if x.even?
+            date_split = date_elements[x].text.split('-')
+            year = date_split[0].to_i
+            expect(year >= 2000).to eql(true)
+            expect(year <= 2018).to eql(true)
+            week = date_split[1].to_i
+            expect(week > 0).to eql(true)
+            expect(week < 54).to eql(true)
+          end
+        end
     end
 
     #page.save_screenshot('screenshot_step_4.png')
@@ -140,17 +150,15 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
 
     # response
     within(:css, '.klip', :text => 'Klip 12') do
-      #within(:css, 'tr', :match => :first) do
-        date_elements = page.all(:css, 'td', :visible => false)
+        date_elements = page.all(:css, 'td', :visible => false, :minimum => 2)
         date_texts = []
-        for i in 0..date_elements.length-1 do
+        for i in 0...date_elements.length do
           if i.even?
             date_texts.push(date_elements[i].text.delete('-'))
           end
         end
         date_texts = date_texts.reject(&:empty?)
         expect(date_texts == date_texts.sort).to eql(true)
-      #end
     end
 
     #page.save_screenshot('screenshot_step_5.png')
@@ -171,18 +179,16 @@ test(id: 92243, title: "Support.12 - dates grouped by week") do
     # response
     expected_texts = ['2016-43', '2017-26', '2017-28']
     within(:css, '.klip', :text => 'Klip 12') do
-      #within(:css, 'tr', :match => :first) do
-        date_elements = page.all(:css, 'td', :visible => true, :count => 6)
-        for i in 0..date_elements.length-1 do
-          if i.even?
+        date_elements = page.all(:css, 'td', :visible => true, :maximum => 7)
+        for i in 0...date_elements.length do
+          if i.even? # data is in every other td row
             expect(expected_texts.include? date_elements[i].text).to eql(true)
           end
         end
-      #end
     end
 
     #page.save_screenshot('screenshot_step_5.png')
     # *** STOP EDITING HERE ***
   end
-
+  
 end
