@@ -6,23 +6,30 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
   # You can use any of the following variables in your code:
   # - []
 
-  # used to run Saucelabs with version 45 of Firefox. Version 50 was causing problems with some functionality
+  # Sauce Labs testing - change full configuration
+  sauce_username=''
+  sauce_access_key=''
+  sauce_browser_name='firefox'
+  sauce_browser_version='45'
+  sauce_os_platform='Windows 7'
+  sauce_job_name='klipfolio_master_dash_1'
   Capybara.register_driver :sauce do |app|
     @desired_cap = {
-      'platform': "Windows 7",
-      'browserName': "firefox",
-      'version': "45",
-      'name': "klipfolio_master_dash_1",
+      'platform': "#{sauce_os_platform}",
+      'browserName': "#{sauce_browser_name}",
+      'version': "#{sauce_browser_version}",
+      'name': "#{sauce_job_name}",
     }
     Capybara::Selenium::Driver.new(app,
       :browser => :remote,
-      :url => 'http://@ondemand.saucelabs.com:80/wd/hub',
+      :url => "http://#{sauce_username}:#{sauce_access_key}@ondemand.saucelabs.com:80/wd/hub",
       :desired_capabilities => @desired_cap
     )
   end
-  #chrome testing
+  #Selenium testing - change browser
+  selenium_browser = :chrome
   Capybara.register_driver :selenium do |app|
-    Capybara::Selenium::Driver.new(app, :browser => :chrome)
+    Capybara::Selenium::Driver.new(app, :browser => selenium_browser)
   end
   
   visit "https://app.Klipfolio.com/login"
@@ -87,7 +94,7 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
     expected_text = ['Country City Average Score Amount', 'Canada 4 19 $38,145', 'USA 4 30 $36,248', 'Germany 4 33 $32,236', '27 $106,629']
     within(:css, '.klip', :text => 'Table with Drill Down - Sample') do
       table_rows = page.all(:css, 'tr', :count => 5, wait: 15)
-      for i in 0..table_rows.length-1 do
+      for i in 0...table_rows.length do
         expect(expected_text.include? table_rows[i].text).to eql(true)
       end
     end
@@ -114,7 +121,7 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
                      'Montreal 33 $10,044', '19 $38,145']
     within(:css, '.klip', :text => 'Table with Drill Down - Sample') do
       table_rows = page.all(:css, 'tr', :count => 6, wait: 15)
-      for i in 0..table_rows.length-1 do
+      for i in 0...table_rows.length do
         expect(expected_text.include? table_rows[i].text).to eql(true)
       end
     end
@@ -139,7 +146,7 @@ test(id: 87012, title: "Master Dashboard 1 visual verification") do
                      'Germany 4 33 $32,236', '27 $106,629']
     within(:css, '.klip', :text => 'Table with Drill Down - Sample') do
       table_rows = page.all(:css, 'tr', :count => 5, wait: 15)
-      for i in 0..table_rows.length-1 do
+      for i in 0...table_rows.length do
         expect(expected_text.include? table_rows[i].text).to eql(true)
       end
     end

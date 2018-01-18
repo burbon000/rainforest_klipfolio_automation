@@ -6,28 +6,35 @@ test(id: 93385, title: "Dashboard logo - replace with account name") do
   # You can use any of the following variables in your code:
   # - []
 
-  # used to run Saucelabs with version 45 of Firefox. Version 50 was causing problems with some functionality
-   Capybara.register_driver :sauce do |app|
+  # Sauce Labs testing - change full configuration
+  sauce_username=''
+  sauce_access_key=''
+  sauce_browser_name='firefox'
+  sauce_browser_version='45'
+  sauce_os_platform='Windows 7'
+  sauce_job_name='klipfolio_dash_logo_replace'
+  Capybara.register_driver :sauce do |app|
     @desired_cap = {
-      'platform': "Windows 7",
-      'browserName': "firefox",
-      'version': "45",
-      'name': "klipfolio_dash_logo_replace",
+      'platform': "#{sauce_os_platform}",
+      'browserName': "#{sauce_browser_name}",
+      'version': "#{sauce_browser_version}",
+      'name': "#{sauce_job_name}",
     }
     Capybara::Selenium::Driver.new(app,
       :browser => :remote,
-      :url => 'http://@ondemand.saucelabs.com:80/wd/hub',
+      :url => "http://#{sauce_username}:#{sauce_access_key}@ondemand.saucelabs.com:80/wd/hub",
       :desired_capabilities => @desired_cap
     )
   end
-  # chrome testing
+  #Selenium testing - change browser
+  selenium_browser = :chrome
   Capybara.register_driver :selenium do |app|
-    Capybara::Selenium::Driver.new(app, :browser => :chrome)
+    Capybara::Selenium::Driver.new(app, :browser => selenium_browser)
   end
 
   username = ''
   password = ''
-  first_name = ''
+  firstname = ''
   account_name = ''
   visit "https://app.Klipfolio.com/"
 

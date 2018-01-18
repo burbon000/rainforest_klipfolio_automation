@@ -6,23 +6,30 @@ test(id: 90753, title: "Changing public link to a private link") do
   # You can use any of the following variables in your code:
   # - []
 
-  # used to run Saucelabs with version 45 of Firefox. Version 50 was causing problems with some functionality
+  # Sauce Labs testing - change full configuration
+  sauce_username=''
+  sauce_access_key=''
+  sauce_browser_name='firefox'
+  sauce_browser_version='45'
+  sauce_os_platform='Windows 7'
+  sauce_job_name='klipfolio_change_public_link'
   Capybara.register_driver :sauce do |app|
     @desired_cap = {
-      'platform': "Windows 7",
-      'browserName': "firefox",
-      'version': "45",
-      'name': "klipfolio_change_public_link",
+      'platform': "#{sauce_os_platform}",
+      'browserName': "#{sauce_browser_name}",
+      'version': "#{sauce_browser_version}",
+      'name': "#{sauce_job_name}",
     }
     Capybara::Selenium::Driver.new(app,
       :browser => :remote,
-      :url => 'http://@ondemand.saucelabs.com:80/wd/hub',
+      :url => "http://#{sauce_username}:#{sauce_access_key}@ondemand.saucelabs.com:80/wd/hub",
       :desired_capabilities => @desired_cap
     )
   end
-  # chrome testing
+  #Selenium testing - change browser
+  selenium_browser = :chrome
   Capybara.register_driver :selenium do |app|
-    Capybara::Selenium::Driver.new(app, :browser => :chrome)
+    Capybara::Selenium::Driver.new(app, :browser => selenium_browser)
   end  
   
   # needed to store the public link url to be able to navigate to it
