@@ -140,14 +140,16 @@ bundle install
 
 ### Locally:
 ```bash
+export CAPYBARA_DRIVER=selenium
 bundle exec rainforest_test test_case.rb
 ```
+The export only needs to be run once
 ### Sauce Labs:
 To run on Sauce Labs, you first need to set the following environment variable. 
 ```bash
 export CAPYBARA_DRIVER=sauce
 ```
-In the script, you will need to specify your sauce_username and sauce_access_key in the variables provided.
+In the script, you will need to specify your <sauce_username> and <sauce_access_key> in the variables provided.
 Then to execute the scripts use the same command as running locally:
 ```bash
 bundle exec rainforest_test test_case.rb
